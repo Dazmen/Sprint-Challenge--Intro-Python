@@ -1,6 +1,12 @@
+import csv
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
 
+class City:
+  def __init__(self, name, lat, lon):
+    self.name = name
+    self.lat = lat
+    self.lon = lon
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -21,6 +27,14 @@ def cityreader(cities=[]):
   # For each city record, create a new City instance and add it to the 
   # `cities` list
     
+    with open('cities.csv') as csv_file:
+      read_csv = list(csv.reader(csv_file, delimiter=","))
+      # print(read_csv)
+
+      for i in range(1, len(read_csv)):
+        # print('So far this works!', row)
+        cities.append(City(read_csv[i][0], float(read_csv[i][3]), float(read_csv[i][4])))
+        
     return cities
 
 cityreader(cities)
@@ -63,9 +77,18 @@ for c in cities:
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
   within = []
+  
+  # Normalize the data
+  maxLat = max(lat1, lat2)
+  minLat = min(lat1, lat2)
+  
+  maxLon = max(lon1, lon2)
+  minLon = min(lon1, lon2)
 
-  # TODO Ensure that the lat and lon valuse are all floats
-  # Go through each city and check to see if it falls within 
-  # the specified coordinates.
+  # loop through cities array, comparing the lat/lon to min/max lat/lon and append to within list if between those values
+  for c in cities:
+    if minLat <= c.lat <= maxLat and minLon <= c.lon <= maxLon:
+      within.append(c)
 
   return within
+
